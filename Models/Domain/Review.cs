@@ -26,6 +26,10 @@ namespace TheLibrary.Models.Domain
         public Reviewer Reviewer { get; set; }
 
         public Book Book { get; set; }
+
+        public int BookId { get; set; }
+
+        public int ReviewerId { get; set; }
     }
 }
 

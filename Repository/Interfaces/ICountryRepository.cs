@@ -1,5 +1,6 @@
 ﻿using System;
 using TheLibrary.Models.Domain;
+using TheLibrary.Models.DTOs.Requests;
 
 namespace TheLibrary.Repository.Interfaces
 {
@@ -9,9 +10,11 @@ namespace TheLibrary.Repository.Interfaces
         public Task<Country?> GetByIdAsync(int id);
         public Task<Author?> GetCountryByAuthorId(int authorId);
         public Task<Country?> GetAuthorsByCountryId(int countryId);
-        public Task<Country> CreateAsync(Country country);
-        public Task<Country> UpdateAsync(int id, Country country);
-        public Task<Country> DeleteAsync(int id);
+        public Task<bool> CreateAsync(Country country);
+        public Task<bool> UpdateAsync(int id, Country country);
+        public Task<bool> DeleteAsync(int id);
+        public Task<bool> Save(Country country);
+        public Task<bool> IsNull (string country);
     }
 }
 

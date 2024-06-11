@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.Metrics;
 using Microsoft.EntityFrameworkCore;
 using TheLibrary.Data;
 using TheLibrary.Models.Domain;
+using TheLibrary.Models.DTOs.Requests;
 using TheLibrary.Repository.Interfaces;
 
 namespace TheLibrary.Repository
@@ -19,64 +21,100 @@ namespace TheLibrary.Repository
 
         public async Task<List<Country>> GetAllAsync()
         {
-            return await _context.Countries.ToListAsync();
+            return await _context.Countries.Include(a => a.Authors).ToListAsync();
         }
 
         public async Task<Country?> GetByIdAsync(int id)
         {
-            return await _context.Countries.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Countries.Include(a => a.Authors).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Country?> GetAuthorsByCountryId(int countryId)
         {
+
             return await _context.Countries.Include(a => a.Authors).FirstOrDefaultAsync(i => i.Id == countryId);
         }
 
         public async Task<Author?> GetCountryByAuthorId(int authorId)
         {
-            return await _context.Authors.Include(c => c.Country).FirstOrDefaultAsync(i => i.Id == authorId);
+            return await _context.Authors.Select(a => new Author
+            {
+                Id = a.Id,
+                FirstName = a.FirstName,
+                LastName = a.LastName,
+                Country = a.Country
+            }).FirstOrDefaultAsync(i => i.Id == authorId);
         }
 
-        public async Task<Country> CreateAsync(Country country)
+        public async Task<bool> CreateAsync(Country country)
         {
+            
             await _context.Countries.AddAsync(country);
-            await _context.SaveChangesAsync();
-
-            return country;
+            return await Save(country);
         }
-        public async Task<Country> UpdateAsync(int id, Country country)
+        public async Task<bool> UpdateAsync(int id, Country country)
         {
             var existingCountry = await _context.Countries.FirstOrDefaultAsync(x => x.Id == id);
 
             if(existingCountry == null)
             {
-                return null;
+                return false;
             }
-
+            
             existingCountry.Name = country.Name;
-            await _context.SaveChangesAsync();
 
-            return existingCountry;
+            return await Save(country);
         }
 
-        public async Task<Country> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var country = await _context.Countries.FirstOrDefaultAsync(x => x.Id == id);
+            
+            var country = await _context.Countries.Include(a => a.Authors).FirstOrDefaultAsync(x => x.Id == id);
+            
+            //if(country != null && country.Authors == null)
+            //{
+            //_context.Countries.Remove(country);
+            //await Save(country);
+            //return true;    
+            //}else if(country.Authors != null)
+            //{
+            //    return false;
+            //}
 
-            if(country == null)
+            //return false;
+
+            //check if country exist 
+            if (!await IsNull(country.Name))
             {
-                return null;
+                throw new Exception("the country does not exist");
             }
+
+            foreach(var author in country.Authors)
+            {
+                if(country.Authors != null)
+                {
+                    return false;
+                }
+            }
+            
 
             _context.Countries.Remove(country);
-            await _context.SaveChangesAsync();
-
-            return country;
+            return await Save(country);
         }
 
+        public async Task<bool> Save(Country country)
+        {
+            if(await _context.SaveChangesAsync() > 0)
+            {
+                return true;
+            }
+            return false;
+        }
 
-        
-
+        public async Task<bool> IsNull(string country)
+        {
+            return await _context.Countries.AnyAsync(c => c.Name.ToUpper() == country);
+        }
         
     }
 }

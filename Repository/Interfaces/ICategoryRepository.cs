@@ -7,11 +7,13 @@ namespace TheLibrary.Repository.Interfaces
 	{
         public Task<List<Category>> GetAllAsync();
         public Task<Category?> GetByIdAsync(int id);
-        public Task<BookCategory?> GetCategoriesByBookIdAsync(int bookId);
-        public Task<BookCategory?> GetBooksByCategoryIdAsync(int categoryId);
-        public Task<Category> CreateAsync(Category category);
-        public Task<Category> UpdateAsync(int id, Category category);
+        public Task<List<BookCategory?>> GetCategoriesByBookIdAsync(int bookId);
+        public Task<List<BookCategory?>> GetBooksByCategoryIdAsync(int categoryId);
+        public Task<bool> CreateAsync(Category category);
+        public Task<bool> UpdateAsync(int id, Category category);
         public Task<Category> DeleteAsync(int id);
+        public Task<bool> Save(Category category);
+        public Task<bool> IsNull(string name);
     }
 }
 

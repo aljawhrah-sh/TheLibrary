@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.Metrics;
+using TheLibrary.Models.DTOs;
 
 namespace TheLibrary.Models.Domain
 {

@@ -4,13 +4,12 @@ using TheLibrary.Models.Domain;
 
 namespace TheLibrary.Models.DTOs.Responses
 {
-	public class GetBookResponseDto
+	public class GetReviewerResponseDto
 	{
         public int Id { get; set; }
-        public string ISBN { get; set; }
-        public string Title { get; set; }
-        public DateTime PublishDate { get; set; }
-
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        
     }
 }
 

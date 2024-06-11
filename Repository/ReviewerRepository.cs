@@ -36,47 +36,59 @@ namespace TheLibrary.Repository
             return await _context.Reviews.Include(r => r.Reviewer).FirstOrDefaultAsync(i => i.Id == reviewId);
         }
 
-        public async Task<Reviewer> CreateAsync(Reviewer reviewer)
+        public async Task<bool> CreateAsync(Reviewer reviewer)
         {
             await _context.Reviewers.AddAsync(reviewer);
-            await _context.SaveChangesAsync();
-            return reviewer;
+
+            return await Save(reviewer);
         }
 
-        public async Task<Reviewer> UpdateAsync(int id, Reviewer reviewer)
+        public async Task<bool> UpdateAsync(int id, Reviewer reviewer)
         {
             var existingReviewer = await _context.Reviewers.FirstOrDefaultAsync(x => x.Id == id);
 
             if(existingReviewer == null)
             {
-                return null;
+                return false;
             }
 
             existingReviewer.FirstName = reviewer.FirstName;
             existingReviewer.LastName = reviewer.LastName;
 
-            await _context.SaveChangesAsync();
-            return existingReviewer;
+            return await Save(reviewer);
         }
 
-        public async Task<Reviewer> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var reviewer = await _context.Reviewers.FirstOrDefaultAsync(x => x.Id == id);
 
             if(reviewer == null)
             {
-                return null;
+                return false;
             }
 
             _context.Reviewers.Remove(reviewer);
-            await _context.SaveChangesAsync();
-            return reviewer;
+
+            return await Save(reviewer);
         }
 
-        
-        
+        public async Task<bool> Save(Reviewer reviewer)
+        {
+            if(await _context.SaveChangesAsync() > 0)
+            {
+                return true;
+            }
+            return false;
+        }
 
-        
+        public async Task<bool> IsNull(Reviewer reviewer)
+        {
+            if(await _context.Reviews.AnyAsync(r => r.ReviewerId == reviewer.Id))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
 

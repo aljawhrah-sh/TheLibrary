@@ -8,7 +8,7 @@ namespace TheLibrary.Models.DTOs.Responses
 	{
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<BookCategory> BookCategories { get; set; }
+        
     }
 	
 }

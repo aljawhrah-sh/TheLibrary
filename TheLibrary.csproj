@@ -25,6 +25,18 @@
     <None Remove="Mapping\" />
     <None Remove="Models\DTO%27s\Requests\" />
     <None Remove="Models\DTO%27s\Responses\" />
+    <None Remove="Models\DTO%27s\Responses\Author\" />
+    <None Remove="Models\DTO%27s\Requests\Author\" />
+    <None Remove="Models\DTO%27s\Responses\Book\" />
+    <None Remove="Models\DTO%27s\Requests\Book\" />
+    <None Remove="Models\DTO%27s\Requests\Category\" />
+    <None Remove="Models\DTO%27s\Responses\Category\" />
+    <None Remove="Models\DTO%27s\Responses\Country\" />
+    <None Remove="Models\DTO%27s\Requests\Country\" />
+    <None Remove="Models\DTO%27s\Responses\Review\" />
+    <None Remove="Models\DTO%27s\Requests\Review\" />
+    <None Remove="Models\DTO%27s\Responses\Reviewer\" />
+    <None Remove="Models\DTO%27s\Requests\Reviewer\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -35,5 +47,17 @@
     <Folder Include="Mapping\" />
     <Folder Include="Models\DTO%27s\Requests\" />
     <Folder Include="Models\DTO%27s\Responses\" />
+    <Folder Include="Models\DTO%27s\Responses\Author\" />
+    <Folder Include="Models\DTO%27s\Requests\Author\" />
+    <Folder Include="Models\DTO%27s\Responses\Book\" />
+    <Folder Include="Models\DTO%27s\Requests\Book\" />
+    <Folder Include="Models\DTO%27s\Requests\Category\" />
+    <Folder Include="Models\DTO%27s\Responses\Category\" />
+    <Folder Include="Models\DTO%27s\Responses\Country\" />
+    <Folder Include="Models\DTO%27s\Requests\Country\" />
+    <Folder Include="Models\DTO%27s\Responses\Review\" />
+    <Folder Include="Models\DTO%27s\Requests\Review\" />
+    <Folder Include="Models\DTO%27s\Responses\Reviewer\" />
+    <Folder Include="Models\DTO%27s\Requests\Reviewer\" />
   </ItemGroup>
 </Project>

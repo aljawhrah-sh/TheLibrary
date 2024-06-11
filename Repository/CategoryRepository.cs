@@ -3,6 +3,7 @@ using System.Net;
 using Microsoft.EntityFrameworkCore;
 using TheLibrary.Data;
 using TheLibrary.Models.Domain;
+using TheLibrary.Models.DTOs;
 using TheLibrary.Repository.Interfaces;
 
 namespace TheLibrary.Repository
@@ -28,36 +29,37 @@ namespace TheLibrary.Repository
             return await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<BookCategory?> GetCategoriesByBookIdAsync(int bookId)
+        public async Task<List<BookCategory?>> GetCategoriesByBookIdAsync(int bookId)
         {
-            return await _context.BookCategories.Include(b => b.Book).Include(c => c.Category).FirstOrDefaultAsync(b => b.BookId == bookId);
+            //i have the bookid now i need to return it's categories
+           return await _context.BookCategories.Include(bc => bc.Category).Where(bc => bc.BookId == bookId).ToListAsync();
         }
 
-        public async Task<Category> CreateAsync(Category category)
+        public async Task<List<BookCategory?>> GetBooksByCategoryIdAsync(int categoryId)
+        {
+            //select books of a sertain category 
+            return await _context.BookCategories.Include(b => b.Book).Where(c => c.CategoryId == categoryId).ToListAsync();
+        }
+
+        public async Task<bool> CreateAsync(Category category)
         {
             await _context.Categories.AddAsync(category);
-            await _context.SaveChangesAsync();
 
-            return category;
+            return await Save(category);
         }
 
-        public async Task<BookCategory?> GetBooksByCategoryIdAsync(int categoryId)
-        {
-            return await _context.BookCategories.Include(b => b.Book).Include(c => c.Category).FirstOrDefaultAsync(b => b.CategoryId == categoryId);
-        }
-
-        public async Task<Category> UpdateAsync(int id, Category category)
+        public async Task<bool> UpdateAsync(int id, Category category)
         {
             var existingCategory = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
             if(existingCategory == null)
             {
-                return null;
+                return false;
             }
 
             existingCategory.Name = category.Name;
-            await _context.SaveChangesAsync();
-            return existingCategory;
+
+            return await Save(category);
         }
 
         public async Task<Category> DeleteAsync(int id)
@@ -70,16 +72,23 @@ namespace TheLibrary.Repository
             }
 
             _context.Remove(category);
-            await _context.SaveChangesAsync();
-
+             await Save(category);
             return category;
         }
 
-        
+        public async Task<bool> Save(Category category)
+        {
+            if(await _context.SaveChangesAsync() > 0)
+            {
+                return true;
+            }
+            return false;
+        }
 
-        
-
-        
+        public async Task<bool> IsNull(string name)
+        {
+            return await _context.Categories.AnyAsync(n => n.Name.ToUpper() == name);
+        }
     }
 }
 
